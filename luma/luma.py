@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 
-import numpy as np;
+import random
+import sys
 
-import matplotlib.pyplot as plt;
+import matplotlib.pyplot as plt
+import numpy as np
 
-import random;
-
-from convex_hull import *
 from spike import *
+
+sys.path.append('../modules')
+
+from geometry import *
+from graphing import *
 from data import *
 
 # Preprocessing
@@ -27,15 +31,39 @@ clh_min = [clh_s[0], clh_s[1]];
 cuh_max = [cuh_s[0], cuh_s[1]];
 
 # Set up the domain
-t = np.arange(0, mx, 0.01);
+t = np.arange(-1, mx, 0.01);
 
 # Lower
-lower = spike_merged_lambda(clh_s[1], clh_s[0]);
+lower, apex = spike_merged_lambda(clh_s[1], clh_s[0]);
 
 plt.plot(t, lower(t));
 
 # Upper
-upper = spike_merged_lambda(cuh_s[0], cuh_s[len(cuh_s) - 1]);
+upper, apex = 0, 100
+
+for i in cuh_s:
+    for j in cuh_s:
+        if i != j:
+            tmp, tapex = spike_merged_lambda(i, j)
+
+            over = True
+            for k in cuh_s:
+                if tmp(k[0]) < k[1]:
+                    over = False
+
+                    break
+
+            if over:
+                if upper == 0:
+                    upper = tmp
+
+                    apex = tapex
+                elif apex > tapex:
+                    upper = tmp
+
+                    apex = tapex
+
+#            plt.plot(t, tmp(t))
 
 plt.plot(t, upper(t));
 
@@ -64,7 +92,7 @@ mid_sparse = h_sift(mid, mu);
 
 eta = 1/np.exp(-mu * mu);
 
-plt.plot(t, spike_set(t, mid_sparse, eta), 'c');
+# plt.plot(t, spike_set(t, mid_sparse, eta), 'c');
 
 # Average
 
@@ -74,8 +102,8 @@ plt.plot(t, (upper(t) + lower(t))/2);
 
 mid_weight = len(mid_sparse);
 
-plt.plot(t, (upper(t) + lower(t) + mid_weight * spike_set(t, mid_sparse, eta))/(2 +
-    mid_weight));
+# plt.plot(t, (upper(t) + lower(t) + mid_weight * spike_set(t, mid_sparse, eta))/(2 +
+#    mid_weight));
 
 # Show graphs and data
 plot(D, 'cx');
@@ -87,6 +115,6 @@ plot(mid, 'yo');
 plot(mid_sparse, 'cv');
 
 plot(D_clh, 'r-');
-plot(D_cuh, 'gD-');
+plot(D_cuh, 'g-');
 
 plt.show();

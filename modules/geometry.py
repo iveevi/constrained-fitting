@@ -6,8 +6,6 @@ import matplotlib.pyplot as plt;
 
 import random;
 
-from graphing import *
-
 # Convex Hulls
 def convex_lower_hull(D):
     clh = [];

@@ -30,7 +30,7 @@ def spike_set(x, D, eta = 1):
     return sm;
 
 # Spike (Lambda) of merged spikes with auto acuteness
-def spike_merged_lambda(p, q):
+def spike_merged_lambda(p, q, bnd, over):
     a, b = p;
     c, d = q;
 
@@ -63,4 +63,4 @@ def spike_merged_lambda(p, q):
 
     h = a + sign * np.sqrt((klog - np.log(b))/eta);
 
-    return lambda x : np.exp(klog - eta * (x - h) * (x - h))
+    return lambda x : np.exp(klog - eta * (x - h) * (x - h)), klog

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt;
 
 import random;
 
-# Sorting data points
+# Sorting data points by height
 def sort_y(D, rev):
     Ds = {};
 
@@ -22,6 +22,7 @@ def sort_y(D, rev):
 
     return sD;
 
+# Sorting data points left to right
 def sort_x(D, rev):
     Ds = {};
 
